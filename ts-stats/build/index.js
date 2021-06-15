@@ -1,24 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var CsvFileReader_1 = require("./CsvFileReader");
-var MatchResults_1 = require("./MatchResults");
+// import { CsvFileReader } from './CsvFileReader';
+// import { ConsoleReport } from './reportTargets/ConsoleReport';
+// import { WinsAnalysis } from './analyzers/WinsAnalysis';
+// import {HtmlReport } from './reportTargets/HtmlReport'
 var MatchReader_1 = require("./MatchReader");
-var csvFileReader = new CsvFileReader_1.CsvFileReader('football.csv');
-var matchReader = new MatchReader_1.MatchReader(csvFileReader);
+var Summary_1 = require("./Summary");
+// //create a reader that satisfies the ´DataReader´ interface
+// const csvFileReader = new CsvFileReader('football.csv')
+// //create an instance of MatchReader and pass in somthing satisfying
+// //the DataReader' interface
+// const matchReader = new MatchReader(csvFileReader)
+var matchReader = MatchReader_1.MatchReader.fromCsv('football.csv'); //with static method "fromCsv"
 matchReader.load();
-// const reader = new MatchReader('football.csv')
-// reader.read();
-// console.log(reader.data[0])
-// const dfm = reader.data[0][0]
-// 
-var manUnitedWins = 0;
-for (var _i = 0, _a = matchReader.matches; _i < _a.length; _i++) {
-    var match = _a[_i];
-    if (match[1] === 'Man United' && match[5] === MatchResults_1.MatchResults.HomeWin) {
-        manUnitedWins++;
-    }
-    else if (match[2] === 'Man United' && match[5] === MatchResults_1.MatchResults.AwayWin) {
-        manUnitedWins++;
-    }
-}
-console.log("Man united wins " + manUnitedWins);
+// const summary1 = new Summary( new WinsAnalysis('Man United'), new HtmlReport());
+// summary1.buildAndPrintReport(matchReader.matches);
+//the "new" key word is IN the static method we created 
+var summary2 = Summary_1.Summary.winsAnalysisWithHtmlReport('Man United');
+summary2.buildAndPrintReport(matchReader.matches);
