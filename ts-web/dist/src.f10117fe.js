@@ -117,38 +117,28 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"src/models/User.ts":[function(require,module,exports) {
+})({"src/models/Eventing.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.User = void 0;
+exports.Eventing = void 0;
 
-var User =
+var Eventing =
 /** @class */
 function () {
-  function User(data) {
-    this.data = data;
+  function Eventing() {
     this.events = {};
   }
 
-  User.prototype.get = function (propName) {
-    return this.data[propName];
-  };
-
-  User.prototype.set = function (update) {
-    Object.assign(this.data, update); //this functions overwrites all the content of the fires argument with the second argument
-  }; // on(eventName: string, callback: () => {}) {
-
-
-  User.prototype.on = function (eventName, callback) {
+  Eventing.prototype.on = function (eventName, callback) {
     var handlers = this.events[eventName] || [];
     handlers.push(callback);
     this.events[eventName] = handlers;
   };
 
-  User.prototype.trigger = function (eventName) {
+  Eventing.prototype.trigger = function (eventName) {
     var handlers = this.events[eventName];
 
     if (!handlers || handlers.length === 0) {
@@ -160,11 +150,41 @@ function () {
     });
   };
 
+  return Eventing;
+}();
+
+exports.Eventing = Eventing;
+},{}],"src/models/User.ts":[function(require,module,exports) {
+"use strict"; //this is using composition
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.User = void 0;
+
+var Eventing_1 = require("./Eventing");
+
+var User =
+/** @class */
+function () {
+  function User(data) {
+    this.data = data;
+    this.events = new Eventing_1.Eventing();
+  }
+
+  User.prototype.get = function (propName) {
+    return this.data[propName];
+  };
+
+  User.prototype.set = function (update) {
+    Object.assign(this.data, update); //this functions overwrites all the content of the fires argument with the second argument
+  };
+
   return User;
 }();
 
 exports.User = User;
-},{}],"src/index.ts":[function(require,module,exports) {
+},{"./Eventing":"src/models/Eventing.ts"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -174,26 +194,13 @@ Object.defineProperty(exports, "__esModule", {
 var User_1 = require("./models/User");
 
 var user = new User_1.User({
-  name: 'myname',
-  age: 20
+  name: "newtnamess",
+  age: 0
 });
-user.set({
-  name: 'new',
-  age: 85
+user.events.on('change', function () {
+  console.log('change!');
 });
-user.on('change', function () {
-  console.log('1');
-});
-user.on('change', function () {
-  console.log('2');
-});
-user.on('save', function () {
-  console.log('save3');
-});
-user.trigger('saveaa'); // console.log(user.get('name'))
-// console.log(user.get('age'))
-
-console.log('hi', user); // console.log( user)
+user.events.trigger('change');
 },{"./models/User":"src/models/User.ts"}],"../../../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -222,7 +229,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50061" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58813" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
