@@ -1,0 +1,65 @@
+import { AxiosPromise, AxiosResponse } from "axios";
+
+interface ModelAtrribute<T> {
+  set(value: T): void;
+  getAll(): T;
+  get<K extends keyof T>(key: K): T[K];
+}
+
+interface Sync<T> {
+  fetch(id: number): AxiosPromise;
+  save(data: T): AxiosPromise;
+}
+
+interface Events {
+  on(eventName: string, callback: () => void): void;
+  trigger(eventName: string): void;
+}
+
+interface HasId {
+  id?: number;
+}
+
+export class Model<T extends HasId> {
+
+  constructor(
+    private attributes: ModelAtrribute<T>,
+    private events: Events,
+    private sync: Sync<T>
+  ) {}
+
+  // get on() {
+  //   return this.events.on
+  // }
+  on = this.events.on
+  trigger = this.events.trigger
+  get = this.attributes.get
+    
+  set(update: T): void {
+    this.attributes.set(update);
+    this.events.trigger('change')
+  }
+
+  fetch() {
+    const id = this.get('id');
+
+    if (typeof id !=='number') {
+      throw new Error('Cannot fetch without and id')
+    }
+    this.sync.fetch(id)
+      .then((response: AxiosResponse): void => {
+        this.set(response.data)
+        //it could also be : this.attributes.set(response.data)
+    }) 
+  }
+  
+  save(): void {
+    this.sync.save(this.attributes.getAll())
+      .then((response: AxiosResponse): void => {
+        this.trigger('save');
+    })
+    .catch(() => {
+      this.trigger('error')
+    });
+  }
+}
