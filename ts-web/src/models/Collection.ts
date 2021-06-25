@@ -6,6 +6,10 @@ export class Collection<T, K> {
   models: T[]= [];
   events: Eventing = new Eventing();
 
+  //PROJECT:
+  //the homework here would be to do an "abstract CollectionView" to render
+  
+
   constructor(
     public rootUrl: string,
     public deserialize: (json: K) => T
