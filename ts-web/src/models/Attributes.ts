@@ -12,7 +12,7 @@ export class Attributes <T>{
 
   set(update: T): void {
     Object.assign(this.data, update); 
-    //this functions overwrites all the content of the fires argument with the second argument
+    //this functions overwrites all the content of the firts argument with the second argument
   }
 
   getAll(): T {
