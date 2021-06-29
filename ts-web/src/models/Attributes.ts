@@ -27,4 +27,4 @@ export class Attributes <T>{
 
 // const name = attrs.get('name')
 // const age = attrs.get('age')
-// const id = attrs.get('id')
+// const id = attrs.get('id') t
